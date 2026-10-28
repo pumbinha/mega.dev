@@ -35,7 +35,8 @@ Not known. Three problems, three tickets. The queued parser fix closes only the 
   day first. Same swap, different code.
 - **`shift`**: the date is one day off, not swapped ("Lisbon got Tuesday, Toronto got Monday").
   A month-first parser cannot do that; a time zone can. The desk already read these as a one-day
-  move (`desk-notes.json`), but #4471 counted them under the parser by tenant.
+  move (`desk-notes.json`). The desk counts them under their tenant's cause, so the table does
+  too; they also have their own ticket, because the parser fix does not touch them.
 
 The subject line tells none of this: the same subjects appear under all three. That is why merging
 on subject ([decision 0001](/kb/decisions/0001-dedupe-by-subject)) put them in one ticket. The
