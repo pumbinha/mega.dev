@@ -1,0 +1,54 @@
+---
+layout: runbook
+title: '#4471 split · three problems, three tickets'
+owner: pumbinha
+status: open
+reviewed: 2026-10-28
+signature: 'v1.eyJzdWIiOiI2OTYiLCJhdWQiOiJjaGFsbGVuZ2U6d2hhdC1pdC1zaG93cyIsImlhdCI6MTc5MzIxNTM2MSwiZXhwIjoxNzkzMzAxNzYxfQ.W8RKh-eaKnuwaqMhADAJsfi355w8mLKZHpaZXrwv6Lg'
+---
+
+<script>
+  import ProblemTable from '#lib/kb/ProblemTable.svelte';
+  import QueueTimeline from '#lib/kb/QueueTimeline.svelte';
+  import Callout from '#lib/kb/Callout.svelte';
+  import RenderStamp from '#lib/kb/RenderStamp.svelte';
+</script>
+
+[#4471](/kb/incidents/4471) says one issue, one fix queued. Read report by report, it holds three
+problems. Two of them look the same to a reporter: a date with day and month swapped. The third does
+not swap anything: the date moves by one day.
+
+<Callout kind="warn">
+Not known. Three problems, three tickets. The queued parser fix closes only the first one.
+</Callout>
+
+## What #4471 holds
+
+<ProblemTable ticket={4471} />
+
+## How to tell them apart
+
+- **`parser`**: the tenant writes the day first and the report came by app, email, or a
+  `booking-v2` form. The shared parser reads the date month first, so day and month swap.
+- **`hint`**: the tenant writes the day first and the report came through the `booking-v3` form.
+  That form prints `MM/DD/YYYY` under its date field. People type what it says, and the form reads it
+  day first. Same swap, different code.
+- **`shift`**: the date is one day off, not swapped ("Lisbon got Tuesday, Toronto got Monday").
+  A month-first parser cannot do that; a time zone can. The desk already read these as a one-day
+  move (`desk-notes.json`), but #4471 counted them under the parser by tenant.
+
+The subject line tells none of this: the same subjects appear under all three. That is why merging
+on subject ([decision 0001](/kb/decisions/0001-dedupe-by-subject)) put them in one ticket. The
+tenant, the channel and the body tell them apart. Intake's tag does not: it is a guess from the
+browser.
+
+## Since April
+
+<QueueTimeline ticket={4471} />
+
+## Lessons
+
+- A big ticket can be several bugs with one symptom. Before you mark it known, count by cause.
+- Read the reports that do not fit. Five odd ones were a third bug.
+
+<RenderStamp {signature} />

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>#4471 split · three problems, three tickets · support kb</title>
+<style>
+  :root {
+    --bg: #fbfaf7; --fg: #1d1d1b; --muted: #6b6a66; --line: #e3e0d8;
+    --accent: #2f6f5e; --warn: #b4501f; --warn-bg: #fbeee6; --note-bg: #eef5f2;
+    --mono: ui-monospace, 'Cascadia Code', Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #171716; --fg: #ecebe6; --muted: #9c9a93; --line: #34332f;
+      --accent: #6fbfa6; --warn: #f0905d; --warn-bg: #3a2418; --note-bg: #1d2c27;
+    }
+  }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 system-ui, sans-serif; }
+  .kb table { border-collapse: collapse; width: 100%; margin: 1rem 0; font-size: 0.92rem; }
+  .kb th, .kb td { border-bottom: 1px solid var(--line); padding: 0.35rem 0.5rem; text-align: left; }
+  .kb code { font-family: var(--mono); font-size: 0.88em; }
+  .kb a { color: var(--accent); }
+  .kb { max-width: 760px; margin: 0 auto; padding: 2rem 16px 4rem; }
+  .crumb { font: 0.8rem var(--mono); text-decoration: none; color: var(--muted); }
+  h1 { margin: 0.25rem 0 0.5rem; line-height: 1.2; }
+  .meta { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; color: var(--muted); font-size: 0.85rem; margin: 0; }
+  .status { border: 1px solid var(--line); border-radius: 99px; padding: 0 0.6rem; }
+  .stale { color: var(--warn); font-weight: 600; }
+  .banner { background: var(--warn-bg); color: var(--warn); padding: 0.6rem 1rem; border-radius: 6px; }
+  footer { margin-top: 3rem; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--line); padding-top: 1rem; }
+
+aside{border-left:4px solid var(--accent);padding:.5rem 1rem;margin:1rem 0;background:var(--note-bg)} aside.warn{border-color:var(--warn);background:var(--warn-bg)}
+.sum{font-size:1.1rem} .unplaced td{background:var(--warn-bg)}
+svg{width:100%;max-width:640px} .in{fill:var(--warn)} .merged{fill:var(--accent)} text{font:8px var(--mono);fill:var(--muted);text-anchor:middle} figcaption{color:var(--muted);font-size:.85rem} .key{display:inline-block;width:.7em;height:.7em;border-radius:2px} .key.in{background:var(--warn)} .key.merged{background:var(--accent)}
+.stamp{margin:2rem 0 0;font:.85rem var(--mono);color:var(--muted)} .stamp b{color:var(--accent);letter-spacing:.04em} .missing{color:var(--warn)}</style></head>
+<body><div class="kb">
+  <header>
+    <a class="crumb" href="/kb">support desk · kb</a>
+    <h1>#4471 split · three problems, three tickets</h1>
+    <p class="meta"><span>owner <b>pumbinha</b></span><span class="status open">open</span><span>reviewed 2026-10-28 · 0 days ago</span></p>
+  </header>
+  
+  <main>
+<p><a href="/kb/incidents/4471">#4471</a> says one issue, one fix queued. Read report by report, it holds three problems. Two of them look the same to a reporter: a date with day and month swapped. The third does not swap anything: the date moves by one day.</p>
+<aside class="warn">Not known. Three problems, three tickets. The queued parser fix closes only the first one.</aside>
+<h2>What #4471 holds</h2>
+<p class="sum"><strong>412</strong> reports merged into #4471 · <strong>3</strong> problems</p>
+<table><thead><tr><th>problem</th><th>reports</th><th>tenants</th><th>seen</th><th>ticket</th></tr></thead><tbody>
+<tr><td><code>parser</code> parser reads day-first dates month first</td><td>374</td><td>11</td><td>2026-04-01 → 2026-10-04</td><td><a href="https://github.com/pumbinha/mega.dev/issues/1">#1</a></td></tr>
+<tr><td><code>hint</code> booking-v3 form hint says MM/DD in day-first tenants</td><td>33</td><td>3</td><td>2026-04-17 → 2026-09-22</td><td><a href="https://github.com/pumbinha/mega.dev/issues/2">#2</a></td></tr>
+<tr><td><code>shift</code> dates move by one day: time-zone shift</td><td>5</td><td>5</td><td>2026-04-02 → 2026-10-04</td><td><a href="https://github.com/pumbinha/mega.dev/issues/3">#3</a></td></tr>
+</tbody></table>
+<h2>How to tell them apart</h2>
+<ul><li><strong><code>parser</code></strong>: the tenant writes the day first and the report came by app, email, or a <code>booking-v2</code> form. The shared parser reads the date month first, so day and month swap.</li><li><strong><code>hint</code></strong>: the tenant writes the day first and the report came through the <code>booking-v3</code> form. That form prints <code>MM/DD/YYYY</code> under its date field. People type what it says, and the form reads it day first. Same swap, different code.</li><li><strong><code>shift</code></strong>: the date is one day off, not swapped (&quot;Lisbon got Tuesday, Toronto got Monday&quot;). A month-first parser cannot do that; a time zone can. The desk already read these as a one-day move (<code>desk-notes.json</code>), but #4471 counted them under the parser by tenant.</li></ul>
+<p>The subject line tells none of this: the same subjects appear under all three. That is why merging on subject (<a href="/kb/decisions/0001-dedupe-by-subject">decision 0001</a>) put them in one ticket. The tenant, the channel and the body tell them apart. Intake's tag does not: it is a guess from the browser.</p>
+<h2>Since April</h2>
+<figure><svg viewBox="0 0 648 140" role="img" aria-label="reports received and merged into #4471, per week">
+<rect class="in" x="2" y="106.29629629629629" width="9" height="3.7037037037037033"/><rect class="merged" x="12" y="110" width="9" height="0"/><text x="12" y="128">03-30</text>
+<rect class="in" x="26" y="104.17989417989418" width="9" height="5.82010582010582"/><rect class="merged" x="36" y="110" width="9" height="0"/>
+<rect class="in" x="50" y="102.5925925925926" width="9" height="7.4074074074074066"/><rect class="merged" x="60" y="110" width="9" height="0"/>
+<rect class="in" x="74" y="99.94708994708995" width="9" height="10.052910052910052"/><rect class="merged" x="84" y="110" width="9" height="0"/>
+<rect class="in" x="98" y="101.53439153439153" width="9" height="8.465608465608465"/><rect class="merged" x="108" y="110" width="9" height="0"/><text x="108" y="128">04-27</text>
+<rect class="in" x="122" y="103.65079365079364" width="9" height="6.349206349206349"/><rect class="merged" x="132" y="110" width="9" height="0"/>
+<rect class="in" x="146" y="105.76719576719577" width="9" height="4.232804232804233"/><rect class="merged" x="156" y="110" width="9" height="0"/>
+<rect class="in" x="170" y="103.65079365079364" width="9" height="6.349206349206349"/><rect class="merged" x="180" y="110" width="9" height="0"/>
+<rect class="in" x="194" y="102.5925925925926" width="9" height="7.4074074074074066"/><rect class="merged" x="204" y="110" width="9" height="0"/><text x="204" y="128">05-25</text>
+<rect class="in" x="218" y="101.00529100529101" width="9" height="8.994708994708994"/><rect class="merged" x="228" y="110" width="9" height="0"/>
+<rect class="in" x="242" y="101.53439153439153" width="9" height="8.465608465608465"/><rect class="merged" x="252" y="110" width="9" height="0"/>
+<rect class="in" x="266" y="101.00529100529101" width="9" height="8.994708994708994"/><rect class="merged" x="276" y="110" width="9" height="0"/>
+<rect class="in" x="290" y="104.17989417989418" width="9" height="5.82010582010582"/><rect class="merged" x="300" y="110" width="9" height="0"/><text x="300" y="128">06-22</text>
+<rect class="in" x="314" y="102.06349206349206" width="9" height="7.936507936507936"/><rect class="merged" x="324" y="10" width="9" height="100"/>
+<rect class="in" x="338" y="99.94708994708995" width="9" height="10.052910052910052"/><rect class="merged" x="348" y="100.47619047619048" width="9" height="9.523809523809524"/>
+<rect class="in" x="362" y="101.00529100529101" width="9" height="8.994708994708994"/><rect class="merged" x="372" y="100.47619047619048" width="9" height="9.523809523809524"/>
+<rect class="in" x="386" y="102.06349206349206" width="9" height="7.936507936507936"/><rect class="merged" x="396" y="102.06349206349206" width="9" height="7.936507936507936"/><text x="396" y="128">07-20</text>
+<rect class="in" x="410" y="99.94708994708995" width="9" height="10.052910052910052"/><rect class="merged" x="420" y="99.94708994708995" width="9" height="10.052910052910052"/>
+<rect class="in" x="434" y="105.76719576719577" width="9" height="4.232804232804233"/><rect class="merged" x="444" y="105.76719576719577" width="9" height="4.232804232804233"/>
+<rect class="in" x="458" y="102.06349206349206" width="9" height="7.936507936507936"/><rect class="merged" x="468" y="102.06349206349206" width="9" height="7.936507936507936"/>
+<rect class="in" x="482" y="99.41798941798942" width="9" height="10.582010582010582"/><rect class="merged" x="492" y="99.41798941798942" width="9" height="10.582010582010582"/><text x="492" y="128">08-17</text>
+<rect class="in" x="506" y="102.5925925925926" width="9" height="7.4074074074074066"/><rect class="merged" x="516" y="102.5925925925926" width="9" height="7.4074074074074066"/>
+<rect class="in" x="530" y="98.88888888888889" width="9" height="11.11111111111111"/><rect class="merged" x="540" y="98.88888888888889" width="9" height="11.11111111111111"/>
+<rect class="in" x="554" y="99.41798941798942" width="9" height="10.582010582010582"/><rect class="merged" x="564" y="99.41798941798942" width="9" height="10.582010582010582"/>
+<rect class="in" x="578" y="102.06349206349206" width="9" height="7.936507936507936"/><rect class="merged" x="588" y="102.06349206349206" width="9" height="7.936507936507936"/><text x="588" y="128">09-14</text>
+<rect class="in" x="602" y="96.77248677248677" width="9" height="13.227513227513226"/><rect class="merged" x="612" y="97.83068783068784" width="9" height="12.16931216931217"/>
+<rect class="in" x="626" y="102.06349206349206" width="9" height="7.936507936507936"/><rect class="merged" x="636" y="101.00529100529101" width="9" height="8.994708994708994"/>
+</svg><figcaption><span class="key in"></span> received · <span class="key merged"></span> merged into #4471 · per week</figcaption></figure>
+<h2>Lessons</h2>
+<ul><li>A big ticket can be several bugs with one symptom. Before you mark it known, count by cause.</li><li>Read the reports that do not fit. Five odd ones were a third bug.</li></ul>
+<p class="stamp">desk ref <b>DR-V6Y7-32S7</b></p>
+  </main>
+  <footer>Pages are written by people. Tables and charts are built from data at render time.</footer>
+</div></body></html>
